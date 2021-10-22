@@ -1,11 +1,9 @@
-## DB 
-import psycopg2
 ## ENV
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-#SCRAPING
+## SCRAPING
 import requests
 from bs4 import BeautifulSoup
 
