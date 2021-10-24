@@ -1,5 +1,7 @@
 # DEV TODOS
 
+## BUGS
+- [ ] Glassdoor pagination not working without authentication
 ## FEATURES
 - [x] Indeed Scraper
 - [ ] Glasdoor Scraper

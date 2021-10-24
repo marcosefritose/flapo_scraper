@@ -42,6 +42,7 @@ time.sleep(.5)
 # print("browser.title " + browser.title)
 
 has_next_page = True
+page = 1
 
 while has_next_page:
     review_container = driver.find_element(By.ID, 'ReviewsFeed')
@@ -119,9 +120,10 @@ while has_next_page:
 
     if next_page_button.is_enabled():
       has_next_page = True
+      page = page + 1
       # next_page_button.click()
-      driver.execute_script("arguments[0].click();", next_page_button)
-      time.sleep(2.5)
+      next_page_link = 'https://www.glassdoor.de/Bewertungen/flaschenpost-Bewertungen-E2606852_P'+str(page)+'.htm?filter.iso3Language=deu'
+      driver.get(next_page_link)
       element = WebDriverWait(driver, 2).until(
           EC.presence_of_element_located((By.ID, "ReviewsFeed"))
       )
