@@ -5,9 +5,14 @@ load_dotenv()
 
 ## SCRAPING
 import requests
+import datetime
 from bs4 import BeautifulSoup
+from scraping.models import Review, Platform
 
-from indeed.models import Review
+platform, created = Platform.objects.get_or_create(
+    title = 'Indeed',
+    defaults={'last_scraped': None}
+)
 
 base_url = os.getenv('INDEED_BASE_URL') #'https: // de.indeed.com'
 review_url = os.getenv('INDEED_REVIEW_URL') #'https://de.indeed.com/cmp/Flaschenpost-Se/reviews'
@@ -47,10 +52,12 @@ while has_next_page:
             author_location = author_element.contents[-5]
 
         try:
+            # Try to create new or match with existing review based on review URL
             review, created = Review.objects.update_or_create(
-                title=title,
+                url=review_detail_link,
                 defaults={
-                    'url': review_detail_link,
+                    'platform': platform,
+                    'title': title,
                     'date': date,
                     'rating': rating,
                     'content': content,
@@ -60,9 +67,10 @@ while has_next_page:
                 }
             )
         except Exception as e:
-	        print(len(title))
+	        print('Error saving Indeed Review! \n')
+            #print(e)
 
-    # Check if next page exists
+    # Check if next page exists, end scraping if last page was scraped
     next_page_element = soup.find(title='Weiter')
 
     if next_page_element is not None:
@@ -71,3 +79,6 @@ while has_next_page:
         review_url = base_url + review_rel_url
     else:
         has_next_page = False
+
+platform.last_scraped = datetime.date.today()
+platform.save()
