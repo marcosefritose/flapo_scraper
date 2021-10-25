@@ -45,12 +45,12 @@ class Command(BaseCommand):
 
       driver.get(review_url)
 
-      element = WebDriverWait(driver, 2).until(
-          EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))
-      )
-      
-      driver.execute_script(
-          "document.getElementById('onetrust-consent-sdk').style.display='none';")
+      # element = WebDriverWait(driver, 2).until(
+      #     EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))
+      # )
+
+      # driver.execute_script(
+      #     "document.getElementById('onetrust-consent-sdk').style.display='none';")
 
       has_next_page = True
       new_review_count = 0
@@ -148,12 +148,12 @@ class Command(BaseCommand):
             driver = webdriver.Chrome(options=options)
             driver.get(next_page_link)
 
-            element = WebDriverWait(driver, 2).until(
-                EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))
-            )
+            # element = WebDriverWait(driver, 2).until(
+            #     EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))
+            # )
 
-            driver.execute_script(
-                "document.getElementById('onetrust-consent-sdk').style.display='none';")
+            # driver.execute_script(
+            #     "document.getElementById('onetrust-consent-sdk').style.display='none';")
           else:
             has_next_page = False
             driver.quit()
