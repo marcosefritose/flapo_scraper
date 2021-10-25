@@ -39,9 +39,9 @@ class Command(BaseCommand):
       options.add_argument('--disable-gpu')
       options.add_argument('--no-sandbox')
       options.binary_location = GOOGLE_CHROME_PATH
-      
+
       driver = webdriver.Chrome(
-          execution_path=CHROMEDRIVER_PATH, chrome_options=options)
+          executable_path=CHROMEDRIVER_PATH, chrome_options=options)
 
       driver.get(review_url)
 
