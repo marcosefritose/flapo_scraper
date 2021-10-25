@@ -31,7 +31,7 @@ class Command(BaseCommand):
 
       base_url = os.getenv('GLASSDOOR_BASE_URL')  # 'https://www.glassdoor.de/'
       review_url = os.getenv('GLASSDOOR_REVIEW_URL')
-      # 'https://www.glassdoor.de/Bewertungen/flaschenpost-Bewertungen-E2606852.htm?sort.sortType=RD&sort.ascending=false&filter.iso3Language=deu'
+      # 'https://www.glassdoor.de/Bewertungen/flaschenpost-Bewertungen-E0606852.htm?sort.sortType=RD&sort.ascending=false&filter.iso3Language=deu'
 
       GOOGLE_CHROME_PATH = os.getenv('GOOGLE_CHROME_PATH')
       CHROMEDRIVER_PATH = os.getenv('CHROMEDRIVER_PATH')
@@ -47,7 +47,7 @@ class Command(BaseCommand):
 
       driver.get(review_url)
 
-      element = WebDriverWait(driver, 2).until(
+      element = WebDriverWait(driver, 20).until(
           EC.presence_of_element_located((By.ID, "ReviewsFeed"))
       )
 
@@ -151,7 +151,7 @@ class Command(BaseCommand):
             driver.get(next_page_link)
             
             
-            element = WebDriverWait(driver, 2).until(
+            element = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.ID, "ReviewsFeed"))
             )
 
