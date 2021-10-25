@@ -45,6 +45,10 @@ class Command(BaseCommand):
 
       driver.get(review_url)
 
+      element = WebDriverWait(driver, 2).until(
+          EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))
+      )
+      
       driver.execute_script(
           "document.getElementById('onetrust-consent-sdk').style.display='none';")
 
