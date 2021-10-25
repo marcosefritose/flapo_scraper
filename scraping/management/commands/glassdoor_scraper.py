@@ -12,6 +12,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from scraping.models import Review, Platform
 import datetime
+import time
 
 # AUTOMATION
 from django.core.management.base import BaseCommand
@@ -44,6 +45,8 @@ class Command(BaseCommand):
           executable_path=CHROMEDRIVER_PATH, chrome_options=options)
 
       driver.get(review_url)
+
+      time.sleep(3)
 
       # element = WebDriverWait(driver, 2).until(
       #     EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))
@@ -147,7 +150,9 @@ class Command(BaseCommand):
             driver.quit()
             driver = webdriver.Chrome(options=options)
             driver.get(next_page_link)
-
+            
+            time.sleep(3)
+            
             # element = WebDriverWait(driver, 2).until(
             #     EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))
             # )
