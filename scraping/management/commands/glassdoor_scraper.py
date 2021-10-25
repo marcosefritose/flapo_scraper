@@ -40,14 +40,18 @@ class Command(BaseCommand):
       options.headless = True
       options.add_argument('--disable-gpu')
       options.add_argument('--no-sandbox')
+      options.add_argument('--remote-debugging-port=9222')
       options.binary_location = GOOGLE_CHROME_PATH
 
       driver = webdriver.Chrome(
           executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+      
+      # For local development
+      # driver = webdriver.Chrome(chrome_options=options)
 
       driver.get(review_url)
 
-      element = WebDriverWait(driver, 20).until(
+      element = WebDriverWait(driver, 10).until(
           EC.presence_of_element_located((By.ID, "ReviewsFeed"))
       )
 
@@ -151,7 +155,7 @@ class Command(BaseCommand):
             driver.get(next_page_link)
             
             
-            element = WebDriverWait(driver, 20).until(
+            element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "ReviewsFeed"))
             )
 
