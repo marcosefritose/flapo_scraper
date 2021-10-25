@@ -5,16 +5,13 @@ load_dotenv()
 
 # SCRAPING
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
-import chromedriver_binary
 
 from scraping.models import Review, Platform
 import datetime
-import time
 
 # AUTOMATION
 from django.core.management.base import BaseCommand
@@ -34,11 +31,18 @@ class Command(BaseCommand):
       review_url = os.getenv('GLASSDOOR_REVIEW_URL')
       # 'https://www.glassdoor.de/Bewertungen/flaschenpost-Bewertungen-E2606852.htm?sort.sortType=RD&sort.ascending=false&filter.iso3Language=deu'
 
-      options = Options()
-      options.headless = True
-      options.add_argument("--window-size=1920,1200")
+      GOOGLE_CHROME_PATH = os.getenv('GOOGLE_CHROME_PATH')
+      CHROMEDRIVER_PATH = os.getenv('CHROMEDRIVER_PATH')
 
-      driver = webdriver.Chrome(options=options)
+      options = webdriver.ChromeOptions()
+      options.headless = True
+      options.add_argument('--disable-gpu')
+      options.add_argument('--no-sandbox')
+      options.binary_location = GOOGLE_CHROME_PATH
+      
+      driver = webdriver.Chrome(
+          execution_path=CHROMEDRIVER_PATH, chrome_options=options)
+
       driver.get(review_url)
 
       driver.execute_script(
