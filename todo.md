@@ -1,10 +1,10 @@
 # DEV TODOS
 
 ## BUGS
-- [ ] Glassdoor pagination not working without authentication
+- [x] Glassdoor pagination not working without authentication [SOLVED]
 ## FEATURES
 - [x] Indeed Scraper
-- [ ] Glasdoor Scraper
+- [x] Glasdoor Scraper
 - [ ] Kununu Scraper
 - [ ] Xing Scraper
 - [ ] Stepstone Scraper
@@ -15,3 +15,4 @@
 - [ ] Create dev deployment environment (Heroku?)
 - [ ] Indeed: Get category specific ratings (salary, cultrue...) + (Dis-)advantages by scraping review detail pages
 - [ ] Abstract generic scraping code
+- [ ] Date string parser helper
