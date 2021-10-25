@@ -1,2 +1,3 @@
 web: gunicorn flaposcraper.wsgi:application --log-file - --log-level debug
-release: manage.py migrate
+python manage.py collectstatic --noinput
+manage.py migrate
