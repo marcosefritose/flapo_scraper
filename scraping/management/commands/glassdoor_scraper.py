@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 
-from scraping.models import Review, Platform
+from scraping.models import Review, Platform, Text
 import datetime
 import time
 import chromedriver_binary
@@ -23,6 +23,52 @@ class Command(BaseCommand):
     help = "Collect review from Indeed"
 
     def handle(self, *args, **options):
+
+      def parse_month_string(month_string):
+        if month_string == 'Jan.':
+            return 1
+        elif month_string == 'Feb.':
+            return 2
+        elif month_string == 'März':
+            return 3
+        elif month_string == 'Apr.':
+            return 4
+        elif month_string == 'Mai':
+            return 5
+        elif month_string == 'Juni':
+            return 6
+        elif month_string == 'Juli':
+            return 7
+        elif month_string == 'Aug.':
+            return 8
+        elif month_string == 'Sept.':
+            return 9
+        elif month_string == 'Okt.':
+            return 10
+        elif month_string == 'Nov.':
+            return 11
+        elif month_string == 'Dez.':
+            return 12
+        else:
+            raise TypeError(f"No matching month: {month_string}")
+
+      def parse_date_string(date_string):
+        date_string_split = date_string.split(' ')
+
+        day = int(date_string_split[0].replace('.', ''))
+        month = parse_month_string(date_string_split[1])
+        year = int(date_string_split[2])
+
+        date = datetime.date(year, month, day)
+        return date
+
+      def parse_author_status(status_string):
+        if 'Ehem.' in status_string:
+              return False
+        elif 'Akt.' in status_string:
+            return True
+        else:
+            return None
 
       platform, created = Platform.objects.get_or_create(
           title='Glassdoor',
@@ -41,13 +87,13 @@ class Command(BaseCommand):
       options.add_argument('--disable-gpu')
       options.add_argument('--no-sandbox')
       options.add_argument('--remote-debugging-port=9222')
-      options.binary_location = GOOGLE_CHROME_PATH
+      # options.binary_location = GOOGLE_CHROME_PATH
 
-      driver = webdriver.Chrome(
-          executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+      # driver = webdriver.Chrome(
+      #     executable_path=CHROMEDRIVER_PATH, chrome_options=options)
       
       # For local development
-      # driver = webdriver.Chrome(chrome_options=options)
+      driver = webdriver.Chrome(chrome_options=options)
 
       driver.get(review_url)
 
@@ -88,30 +134,20 @@ class Command(BaseCommand):
               #   print('No Button')
 
               # Review body is split up into different categories that need to be merged together
-              content = ''
               content_list = review.find_elements(By.CLASS_NAME, 'v2__EIReviewDetailsV2__fullWidth')
-              
-              for content_piece in content_list:
-                # Comment by the employer have same identifier, but dont contain strong tag
-                try:
-                  category = content_piece.find_element(By.CLASS_NAME, 'strong').text
-                  body = content_piece.find_element(By.CLASS_NAME, 'v2__EIReviewDetailsV2__bodyColor').text
-                  content = content + category + ': ' + body + '; '
-                except NoSuchElementException:
-                  pass
-
 
               # Author string contains Job Role and Creation Date
               author_string = review.find_element(By.CLASS_NAME, 'authorJobTitle').text
               
               try:
                 author_string_split = author_string.split(' - ')
-                date = author_string_split[0]
+                date = parse_date_string(author_string_split[0])
                 author_role = author_string_split[1]
               except Exception as e:
                 print(e)
               
-              author_status = review.find_element(By.CLASS_NAME, 'pt-xsm').text # TODO find better identifier
+              author_status = parse_author_status(review.find_element(
+                  By.CLASS_NAME, 'pt-xsm').text)  # TODO find better identifier
 
               try:
                   author_location = review.find_element(
@@ -127,8 +163,7 @@ class Command(BaseCommand):
                           'platform': platform,
                           'title': title,
                           'date': date,
-                          'rating': rating,
-                          'content': content,
+                          'total_rating_score': rating,
                           'author_status': author_status,
                           'author_role': author_role,
                           'author_location': author_location
@@ -137,6 +172,22 @@ class Command(BaseCommand):
 
                   if created:
                     new_review_count = new_review_count + 1
+
+                    for content_piece in content_list:
+                      # Comment by the employer have same identifier, but dont contain strong tag
+                      try:
+                        type = content_piece.find_element(By.CLASS_NAME, 'strong').text
+                        content = content_piece.find_element(By.CLASS_NAME, 'v2__EIReviewDetailsV2__bodyColor').text
+                        
+                        text = Text.objects.create(
+                          review = review,
+                          text_type = type,
+                          content = content
+                        )
+
+                      except Exception as e:
+                        #print(e)
+                        pass
               except Exception as e:
                 print(e)
 

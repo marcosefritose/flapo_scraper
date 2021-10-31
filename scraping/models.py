@@ -7,12 +7,21 @@ class Platform(models.Model):
 
 class Review(models.Model):
   platform = models.ForeignKey(Platform, on_delete=models.DO_NOTHING)
-  date = models.CharField(max_length=50)
-  rating = models.DecimalField(max_digits=10, decimal_places=2)
+  date = models.DateField()
+  total_rating_score = models.DecimalField(max_digits=5, decimal_places=2)
   title = models.CharField(max_length=200)
-  content = models.CharField(max_length=5000)
-  url = models.CharField(max_length=200)
+  url = models.CharField(max_length=250, null=True)
 
-  author_status = models.CharField(max_length=50)
-  author_role = models.CharField(max_length=50)
-  author_location = models.CharField(max_length=50)
+  author_status = models.BooleanField(null=True)
+  author_role = models.CharField(max_length=50, null=True)
+  author_location = models.CharField(max_length=50, null=True)
+
+class Text(models.Model):
+  review = models.ForeignKey(Review, on_delete=models.CASCADE)
+  text_type = models.CharField(max_length=100)
+  content = models.CharField(max_length=2500)
+
+class Rating(models.Model):
+  review = models.ForeignKey(Review, on_delete=models.CASCADE)
+  rating_type = models.CharField(max_length=100)
+  rating_score = models.DecimalField(max_digits=5, decimal_places=2)
