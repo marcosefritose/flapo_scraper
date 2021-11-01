@@ -67,7 +67,7 @@ class Command(BaseCommand):
                 title=title,
                 defaults={
                     'platform': platform,
-                    'date': date,
+                    'creation_date': date,
                     'total_rating_score': rating,
                     'author_status': author_status,
                     'author_role': author_role,

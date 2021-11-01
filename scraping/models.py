@@ -7,7 +7,7 @@ class Platform(models.Model):
 
 class Review(models.Model):
   platform = models.ForeignKey(Platform, on_delete=models.DO_NOTHING)
-  date = models.DateField()
+  creation_date = models.DateField()
   total_rating_score = models.DecimalField(max_digits=5, decimal_places=2)
   title = models.CharField(max_length=200)
   url = models.CharField(max_length=250, null=True)

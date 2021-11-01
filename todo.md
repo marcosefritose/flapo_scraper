@@ -18,3 +18,4 @@
 - [ ] Abstract generic scraping code
 - [x] Date string parser helper
 - [ ] Add Kununu Platform export ftp access
+- [x] Rename Review date field

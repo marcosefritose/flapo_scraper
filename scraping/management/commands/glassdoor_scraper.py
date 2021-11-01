@@ -153,7 +153,7 @@ class Command(BaseCommand):
                   author_location = review.find_element(
                       By.CLASS_NAME, 'authorLocation').text
               except NoSuchElementException:
-                  author_location = 'NA'
+                  author_location = None
 
               try:
                   # Try to create new or match with existing review based on review URL
@@ -162,7 +162,7 @@ class Command(BaseCommand):
                       defaults={
                           'platform': platform,
                           'title': title,
-                          'date': date,
+                          'creation_date': date,
                           'total_rating_score': rating,
                           'author_status': author_status,
                           'author_role': author_role,
